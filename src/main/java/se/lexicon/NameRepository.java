@@ -16,17 +16,18 @@ public class NameRepository {
      */
     public static int getSize() {
         //todo: PART 1: implement getSize method
-        return 0;
+        return names.length;
     }
 
 
     /**
      * Sets the names array to the provided array of names & it should replace all existing names.
      *
-     * @param names The array of names to set.
+     * param names The array of names to set.
      */
-    public static void setNames(String[] names) {
+    public static void setNames(String[] newNames) {
         //todo: PART 1: implement setNames method
+        names = newNames;
     }
 
 
@@ -35,6 +36,7 @@ public class NameRepository {
      */
     public static void clear() {
         //todo: PART 1: implement clear method
+        names = new String[0];
     }
 
 
@@ -45,7 +47,7 @@ public class NameRepository {
      */
     public static String[] findAll() {
         //todo: PART 1: implement findAll method
-        return null;
+        return names.clone();
     }
 
 
@@ -57,6 +59,11 @@ public class NameRepository {
      */
     public static String find(String fullName) {
         //todo: PART 2: implement find method
+        for (String name : names) {
+            if (name.equals(fullName)) {
+                return name;
+            }
+        }
         return null;
     }
 
@@ -69,7 +76,14 @@ public class NameRepository {
      */
     public static boolean add(String fullName) {
         //todo: PART 2: implement add method
-        return false;
+        if (find(fullName) != null) {
+            return false;
+        }
+        String[] newNames = new String[names.length + 1];
+        System.arraycopy(names, 0, newNames, 0, names.length);
+        newNames[names.length] = fullName;
+        names = newNames;
+        return true;
     }
 
 
@@ -81,7 +95,13 @@ public class NameRepository {
      */
     public static String[] findByFirstName(String firstName) {
         //todo: PART 3: findByFirstName method
-        return null;
+        String[] result = new String[0];
+        for (String name : names) {
+            if (name.startsWith(firstName + " ")) {
+                result = addToArray(result, name);
+            }
+        }
+        return result;
     }
 
 
@@ -93,7 +113,13 @@ public class NameRepository {
      */
     public static String[] findByLastName(String lastName) {
         //todo: PART 3: implement findByLastName method
-        return null;
+        String[] result = new String[0];
+        for (String name : names) {
+            if (name.endsWith(" " + lastName)) {
+                result = addToArray(result, name);
+            }
+        }
+        return result;
     }
 
 
@@ -106,6 +132,11 @@ public class NameRepository {
      */
     public static boolean update(String original, String updatedName) {
         //todo: PART 3: implement update method
+        int index = indexOf(original);
+        if (index != -1 && find(updatedName) == null) {
+            names[index] = updatedName;
+            return true;
+        }
         return false;
     }
 
@@ -118,7 +149,34 @@ public class NameRepository {
      */
     public static boolean remove(String fullName) {
         //todo: PART 4: implement remove method
-        return false;
+        int index = indexOf(fullName);
+        if (index == -1) {
+            return false;
+        }
+        String[] newNames = new String[names.length - 1];
+        for (int i = 0, j = 0; i < names.length; i++) {
+            if (i != index) {
+                newNames[j++] = names[i];
+            }
+        }
+        names = newNames;
+        return true;
+    }
+
+    private static int indexOf(final String fullName) {
+        for (int i = 0; i < names.length; i++) {
+            if (names[i].equals(fullName)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private static String[] addToArray(String[] array, String element) {
+        String[] newArray = new String[array.length + 1];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        newArray[array.length] = element;
+        return newArray;
     }
 
 
